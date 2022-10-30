@@ -1,6 +1,5 @@
 import os.path
 import pathlib
-import requests
 import urllib.request
 import tarfile
 import shutil
@@ -67,7 +66,7 @@ class Utils:
 
 
 if __name__ == "__main__":
-    if not os.path.isfile("patients_metadata.csv"):
+    if not (os.path.isfile("patients_metadata.csv") and os.path.isfile("DM_TH.tgz")):
         utils = Utils()
         url = "https://s3.amazonaws.com/viz_data/DM_TH.tgz"
         file_name = utils.download_from_url(url)
@@ -95,7 +94,7 @@ if __name__ == "__main__":
             dicom_parse_data.append(patient)
 
         df = pd.DataFrame.from_records([vars(s) for s in dicom_parse_data])
-        print(tabulate(df, headers="keys", tablefmt="psql"))
+        # print(tabulate(df, headers="keys", tablefmt="psql"))
         Utils.to_csv(df, "patients_metadata.csv")
     else:
         df = pd.read_csv("patients_metadata.csv")
